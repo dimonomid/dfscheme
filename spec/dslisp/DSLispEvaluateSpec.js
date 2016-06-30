@@ -91,6 +91,13 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("no");
   });
 
+  it("should calculate factorial", function() {
+    lisp.exec("(define fact (lambda (x) (if (< x 2) x (* (fact (- x 1)) x))))");
+
+    var str = lisp.exec("(fact 10)");
+    expect(str).toEqual("3628800");
+  });
+
   it("should define variable", function() {
     lisp.exec("(define x 1)");
 
