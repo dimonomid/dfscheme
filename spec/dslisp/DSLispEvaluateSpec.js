@@ -20,6 +20,20 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("23");
   });
 
+  it("should hanlde <", function() {
+    var str = lisp.exec("(<)");
+    expect(str).toEqual("#t");
+
+    var str = lisp.exec("(< -1)");
+    expect(str).toEqual("#t");
+
+    var str = lisp.exec("(< 1 2 3)");
+    expect(str).toEqual("#t");
+
+    var str = lisp.exec("(< 1 3 2)");
+    expect(str).toEqual("#f");
+  });
+
   it("should hanlde quote", function() {
     var str = lisp.exec("'foo");
     expect(str).toEqual("foo");
