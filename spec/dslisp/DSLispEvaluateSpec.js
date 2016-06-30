@@ -20,6 +20,32 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("23");
   });
 
+  it("should hanlde -", function() {
+    var str = lisp.exec("(- 1)");
+    expect(str).toEqual("-1");
+
+    var str = lisp.exec("(- 10 1)");
+    expect(str).toEqual("9");
+
+    var str = lisp.exec("(- 10 1 3)");
+    expect(str).toEqual("6");
+
+    expect(function() {
+      var str = lisp.exec("(-)");
+    }).toThrow();
+  });
+
+  it("should hanlde *", function() {
+    var str = lisp.exec("(*)");
+    expect(str).toEqual("1");
+
+    var str = lisp.exec("(* 2 3)");
+    expect(str).toEqual("6");
+
+    var str = lisp.exec("(* 2 3 10)");
+    expect(str).toEqual("60");
+  });
+
   it("should hanlde <", function() {
     var str = lisp.exec("(<)");
     expect(str).toEqual("#t");
