@@ -71,6 +71,26 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("(1 2 foo (a b c))");
   });
 
+  it("should hanlde if", function() {
+    var str = lisp.exec("(if (< 2 3) 'yes 'no)");
+    expect(str).toEqual("yes");
+
+    var str = lisp.exec("(if (< 3 2) 'yes 'no)");
+    expect(str).toEqual("no");
+
+    var str = lisp.exec("(if 1 'yes 'no)");
+    expect(str).toEqual("yes");
+
+    var str = lisp.exec("(if 0 'yes 'no)");
+    expect(str).toEqual("yes");
+
+    var str = lisp.exec("(if () 'yes 'no)");
+    expect(str).toEqual("yes");
+
+    var str = lisp.exec("(if #f 'yes 'no)");
+    expect(str).toEqual("no");
+  });
+
   it("should define variable", function() {
     lisp.exec("(define x 1)");
 
