@@ -31,4 +31,20 @@ describe("DSLisp tokenizer", function() {
     expect(tokens).toEqual(["(", "foo", "\"test\"", ")"]);
   });
 
+  it("should handle single quote", function() {
+    var tokens = lisp.tokenize("'foo");
+    expect(tokens).toEqual(["'", "foo"]);
+
+    var tokens = lisp.tokenize("'foo'bar");
+    expect(tokens).toEqual(["'", "foo", "'", "bar"]);
+  });
+
+  // TODO: implement correct string handling in tokenizer and uncomment this test
+  /*
+  it("should handle quoted strings", function() {
+    var tokens = lisp.tokenize("'foo'bar \"'foo'bar\"");
+    expect(tokens).toEqual(["'", "foo", "'", "bar", "\"'foo'bar\""]);
+  });
+  */
+
 });
