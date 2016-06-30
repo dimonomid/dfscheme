@@ -31,6 +31,11 @@ describe("DSLisp tokenizer", function() {
     expect(tokens).toEqual(["(", "foo", "\"test\"", ")"]);
   });
 
+  it("should handle true and false", function() {
+    var tokens = lisp.tokenize("#t #f");
+    expect(tokens).toEqual(["#t", "#f"]);
+  });
+
   it("should handle single quote", function() {
     var tokens = lisp.tokenize("'foo");
     expect(tokens).toEqual(["'", "foo"]);
