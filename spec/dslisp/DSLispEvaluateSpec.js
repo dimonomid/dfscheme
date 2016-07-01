@@ -2,17 +2,6 @@ describe("DSLisp evaluate", function() {
   var DSLisp = require('../../lib/DSLisp.js')
   var lisp;
 
-  var factExprs = [
-    "(define fact (lambda (n) (fact-iter 1 1 n)))",
-
-    "(define fact-iter (lambda (product counter max-count) " +
-    "  (if (< max-count counter) " +
-    "      product " +
-    "      (fact-iter (* counter product) " +
-    "                 (+ counter 1) " +
-    "                 max-count))))",
-  ];
-
   beforeEach(function() {
     lisp = new DSLisp();
   });
@@ -125,6 +114,21 @@ describe("DSLisp evaluate", function() {
 
     // the max call stack size should be equal in both (fact 5) and (fact 10)
     expect(v1).toEqual(v2);
+  });
+
+  it("should handle closures", function() {
+    lisp.exec("(define n 100)");
+    lisp.exec("(define f (lambda (x) (lambda () (define x (+ x 1)) x)))");
+    lisp.exec("(define gen (f 10))");
+
+    var str = lisp.exec("(gen)");
+    expect(str).toEqual("11");
+
+    var str = lisp.exec("(gen)");
+    expect(str).toEqual("12");
+
+    var str = lisp.exec("(gen)");
+    expect(str).toEqual("13");
   });
 
   it("should define variable", function() {
