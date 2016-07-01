@@ -2,6 +2,17 @@ describe("DSLisp evaluate", function() {
   var DSLisp = require('../../lib/DSLisp.js')
   var lisp;
 
+  var factExprs = [
+    "(define fact (lambda (n) (fact-iter 1 1 n)))",
+
+    "(define fact-iter (lambda (product counter max-count) " +
+    "  (if (< max-count counter) " +
+    "      product " +
+    "      (fact-iter (* counter product) " +
+    "                 (+ counter 1) " +
+    "                 max-count))))",
+  ];
+
   beforeEach(function() {
     lisp = new DSLisp();
   });
@@ -91,11 +102,29 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("no");
   });
 
-  it("should calculate factorial", function() {
-    lisp.exec("(define fact (lambda (x) (if (< x 2) x (* (fact (- x 1)) x))))");
+  it("should calc factorial and perform tail-recursion", function() {
+    lisp.exec("(define fact (lambda (n) (fact-iter 1 1 n)))");
+    lisp.exec(
+      "(define fact-iter (lambda (product counter max-count) " +
+      "  (if (< max-count counter) " +
+      "      product " +
+      "      (fact-iter (* counter product) " +
+      "                 (+ counter 1) " +
+      "                 max-count))))"
+    );
 
+    lisp.resetMaxCsLen();
+    var str = lisp.exec("(fact 5)");
+    var v1 = lisp.getMaxCsLen();
+    expect(str).toEqual("120");
+
+    lisp.resetMaxCsLen()
     var str = lisp.exec("(fact 10)");
+    var v2 = lisp.getMaxCsLen();
     expect(str).toEqual("3628800");
+
+    // the max call stack size should be equal in both (fact 5) and (fact 10)
+    expect(v1).toEqual(v2);
   });
 
   it("should define variable", function() {
