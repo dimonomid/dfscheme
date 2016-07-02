@@ -15,8 +15,11 @@ describe("DSLisp evaluate", function() {
   });
 
   it("should hanlde define", function() {
-    lisp.exec("(define x 123)");
-    lisp.exec("(define y 'foo)");
+    var str = lisp.exec("(define x 123)");
+    expect(str).toEqual("x");
+
+    var str = lisp.exec("(define y 'foo)");
+    expect(str).toEqual("y");
 
     var str = lisp.exec("x");
     expect(str).toEqual("123");
