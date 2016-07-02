@@ -10,11 +10,13 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("(define x 12)"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "define",
-        cdr: new DSLisp.Pair({
-          car: "x",
+        car: new DSLisp.Pair({
+          car: "define",
           cdr: new DSLisp.Pair({
-            car: "12",
+            car: "x",
+            cdr: new DSLisp.Pair({
+              car: "12",
+            })
           })
         })
       })
@@ -25,14 +27,16 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("'(define x 12)"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "quote",
-        cdr: new DSLisp.Pair({
-          car: new DSLisp.Pair({
-            car: "define",
-            cdr: new DSLisp.Pair({
-              car: "x",
+        car: new DSLisp.Pair({
+          car: "quote",
+          cdr: new DSLisp.Pair({
+            car: new DSLisp.Pair({
+              car: "define",
               cdr: new DSLisp.Pair({
-                car: "12",
+                car: "x",
+                cdr: new DSLisp.Pair({
+                  car: "12",
+                })
               })
             })
           })
@@ -43,9 +47,11 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("'foo"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "quote",
-        cdr: new DSLisp.Pair({
-          car: "foo",
+        car: new DSLisp.Pair({
+          car: "quote",
+          cdr: new DSLisp.Pair({
+            car: "foo",
+          })
         })
       })
 
@@ -56,11 +62,13 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("'(1 . 2)"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "quote",
-        cdr: new DSLisp.Pair({
-          car: new DSLisp.Pair({
-            car: "1",
-            cdr: "2",
+        car: new DSLisp.Pair({
+          car: "quote",
+          cdr: new DSLisp.Pair({
+            car: new DSLisp.Pair({
+              car: "1",
+              cdr: "2",
+            })
           })
         })
       })
@@ -71,10 +79,12 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("'(1 . ())"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "quote",
-        cdr: new DSLisp.Pair({
-          car: new DSLisp.Pair({
-            car: "1",
+        car: new DSLisp.Pair({
+          car: "quote",
+          cdr: new DSLisp.Pair({
+            car: new DSLisp.Pair({
+              car: "1",
+            })
           })
         })
       })
@@ -83,11 +93,13 @@ describe("DSLisp parser", function() {
     var parsed = lisp.parse(lisp.tokenize("(define . (x . (12 . ())))"));
     expect(parsed).toEqual(
       new DSLisp.Pair({
-        car: "define",
-        cdr: new DSLisp.Pair({
-          car: "x",
+        car: new DSLisp.Pair({
+          car: "define",
           cdr: new DSLisp.Pair({
-            car: "12",
+            car: "x",
+            cdr: new DSLisp.Pair({
+              car: "12",
+            })
           })
         })
       })
