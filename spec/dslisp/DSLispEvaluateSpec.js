@@ -12,7 +12,59 @@ describe("DSLisp evaluate", function() {
 
     var str = lisp.exec("1");
     expect(str).toEqual("1");
+  });
 
+  it("should hanlde define", function() {
+    lisp.exec("(define x 123)");
+    lisp.exec("(define y 'foo)");
+
+    var str = lisp.exec("x");
+    expect(str).toEqual("123");
+
+    var str = lisp.exec("y");
+    expect(str).toEqual("foo");
+  });
+
+  it("should hanlde quote", function() {
+    var str = lisp.exec("'foo");
+    expect(str).toEqual("foo");
+
+    var str = lisp.exec("'(1 2 3)");
+    expect(str).toEqual("(1 2 3)");
+
+    var str = lisp.exec("(quote (1 2 4))");
+    expect(str).toEqual("(1 2 4)");
+
+    var str = lisp.exec("'(1 2 foo (a b c))");
+    expect(str).toEqual("(1 2 foo (a b c))");
+  });
+
+  it("should hanlde built-in funcs", function() {
+    var str = lisp.exec("(+ 1 2)");
+    expect(str).toEqual("3");
+
+    var str = lisp.exec("(+ 1 (+ 10 12))");
+    expect(str).toEqual("23");
+  });
+
+  it("should handle lambdas", function() {
+    lisp.exec("(define f (lambda () (+ 100 1)))");
+
+    var str = lisp.exec("(f)");
+    expect(str).toEqual("101");
+
+    lisp.exec("(define f2 (lambda (a b) (+ a b)))");
+
+    var str = lisp.exec("(f2 40 50)");
+    expect(str).toEqual("90");
+
+    lisp.exec("(define f2 (lambda (a b c) (+ a b (* c 3))))");
+
+    var str = lisp.exec("(f2 40 50 2)");
+    expect(str).toEqual("96");
+  });
+
+  it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
 
@@ -60,17 +112,6 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("#f");
   });
 
-  it("should hanlde quote", function() {
-    var str = lisp.exec("'foo");
-    expect(str).toEqual("foo");
-
-    var str = lisp.exec("'(1 2 3)");
-    expect(str).toEqual("(1 2 3)");
-
-    var str = lisp.exec("'(1 2 foo (a b c))");
-    expect(str).toEqual("(1 2 foo (a b c))");
-  });
-
   it("should hanlde if", function() {
     var str = lisp.exec("(if (< 2 3) 'yes 'no)");
     expect(str).toEqual("yes");
@@ -89,7 +130,29 @@ describe("DSLisp evaluate", function() {
 
     var str = lisp.exec("(if #f 'yes 'no)");
     expect(str).toEqual("no");
-  });
+    });
+
+  it("should throw on ill-formed lambdas", function() {
+    // string as formals
+    expect(function() {
+        lisp.exec("(define f (lambda \"sd\" 1))");
+        }).toThrow();
+
+    // number as formals
+    expect(function() {
+        lisp.exec("(define f (lambda 1 1))");
+        }).toThrow();
+
+    // number as one formal
+    expect(function() {
+        lisp.exec("(define f (lambda (1) 1))");
+        }).toThrow();
+
+    // no expressions
+    expect(function() {
+        lisp.exec("(define f (lambda (x)))");
+        }).toThrow();
+    });
 
   it("should calc factorial and perform tail-recursion", function() {
     lisp.exec("(define fact (lambda (n) (fact-iter 1 1 n)))");
@@ -129,47 +192,6 @@ describe("DSLisp evaluate", function() {
 
     var str = lisp.exec("(gen)");
     expect(str).toEqual("13");
-  });
-
-  it("should define variable", function() {
-    lisp.exec("(define x 1)");
-
-    var str = lisp.exec("(+ x 10)");
-    expect(str).toEqual("11");
-  });
-
-  it("should handle lambdas", function() {
-    lisp.exec("(define f (lambda () (+ 100 1)))");
-
-    var str = lisp.exec("(f)");
-    expect(str).toEqual("101");
-
-    lisp.exec("(define f2 (lambda (a b) (+ a b)))");
-
-    var str = lisp.exec("(f2 40 50)");
-    expect(str).toEqual("90");
-  });
-
-  it("should throw on ill-formed lambdas", function() {
-    // string as formals
-    expect(function() {
-      lisp.exec("(define f (lambda \"sd\" 1))");
-    }).toThrow();
-
-    // number as formals
-    expect(function() {
-      lisp.exec("(define f (lambda 1 1))");
-    }).toThrow();
-
-    // number as one formal
-    expect(function() {
-      lisp.exec("(define f (lambda (1) 1))");
-    }).toThrow();
-
-    // no expressions
-    expect(function() {
-      lisp.exec("(define f (lambda (x)))");
-    }).toThrow();
   });
 
 });

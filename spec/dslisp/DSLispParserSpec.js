@@ -8,6 +8,95 @@ describe("DSLisp parser", function() {
 
   it("should parse simple expr", function() {
     var parsed = lisp.parse(lisp.tokenize("(define x 12)"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "define",
+        cdr: new DSLisp.Pair({
+          car: "x",
+          cdr: new DSLisp.Pair({
+            car: "12",
+          })
+        })
+      })
+    );
+  });
+
+  it("should parse quote", function() {
+    var parsed = lisp.parse(lisp.tokenize("'(define x 12)"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "quote",
+        cdr: new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: "define",
+            cdr: new DSLisp.Pair({
+              car: "x",
+              cdr: new DSLisp.Pair({
+                car: "12",
+              })
+            })
+          })
+        })
+      })
+    );
+
+    var parsed = lisp.parse(lisp.tokenize("'foo"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "quote",
+        cdr: new DSLisp.Pair({
+          car: "foo",
+        })
+      })
+
+    );
+  });
+
+  it("should handle dotted list", function() {
+    var parsed = lisp.parse(lisp.tokenize("'(1 . 2)"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "quote",
+        cdr: new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: "1",
+            cdr: "2",
+          })
+        })
+      })
+    );
+  });
+
+  it("should handle dotted list", function() {
+    var parsed = lisp.parse(lisp.tokenize("'(1 . ())"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "quote",
+        cdr: new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: "1",
+          })
+        })
+      })
+    );
+
+    var parsed = lisp.parse(lisp.tokenize("(define . (x . (12 . ())))"));
+    expect(parsed).toEqual(
+      new DSLisp.Pair({
+        car: "define",
+        cdr: new DSLisp.Pair({
+          car: "x",
+          cdr: new DSLisp.Pair({
+            car: "12",
+          })
+        })
+      })
+    );
+  });
+
+  /*
+  it("should parse simple expr", function() {
+    var parsed = lisp.parse(lisp.tokenize("(define x 12)"));
     expect(parsed).toEqual(["define", "x", "12"]);
   });
 
@@ -75,5 +164,6 @@ describe("DSLisp parser", function() {
       }
     ).toThrow(new Error("Ill-formed dotted list"));
   });
+  */
 
 });
