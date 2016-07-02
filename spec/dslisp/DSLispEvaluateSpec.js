@@ -38,8 +38,31 @@ describe("DSLisp evaluate", function() {
     var str = lisp.exec("(quote (1 2 4))");
     expect(str).toEqual("(1 2 4)");
 
-    var str = lisp.exec("'(1 2 foo (a b c))");
-    expect(str).toEqual("(1 2 foo (a b c))");
+    var str = lisp.exec("'(1 2 foo (quote (+ 1 2) c))");
+    expect(str).toEqual("(1 2 foo (quote (+ 1 2) c))");
+  });
+
+  it("should hanlde quasiquote", function() {
+    var str = lisp.exec("`foo");
+    expect(str).toEqual("foo");
+
+    var str = lisp.exec("`(1 2 3)");
+    expect(str).toEqual("(1 2 3)");
+
+    var str = lisp.exec("(quasiquote (1 2 4))");
+    expect(str).toEqual("(1 2 4)");
+
+    var str = lisp.exec("`(1 2 foo (quote (+ 1 2) c))");
+    expect(str).toEqual("(1 2 foo (quote (+ 1 2) c))");
+
+    var str = lisp.exec("`(1 2 foo (quote (unquote (+ 1 2)) c))");
+    expect(str).toEqual("(1 2 foo (quote 3 c))");
+
+    var str = lisp.exec("`(1 2 foo '( ,(+ 1 2)) c)");
+    expect(str).toEqual("(1 2 foo (quote (3)) c)");
+
+    var str = lisp.exec("`(1 2 foo ',(+ 1 2) c)");
+    expect(str).toEqual("(1 2 foo (quote 3) c)");
   });
 
   it("should hanlde built-in funcs", function() {

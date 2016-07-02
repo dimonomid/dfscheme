@@ -24,38 +24,70 @@ describe("DSLisp parser", function() {
   });
 
   it("should parse quote", function() {
-    var parsed = lisp.parse(lisp.tokenize("'(define x 12)"));
-    expect(parsed).toEqual(
-      new DSLisp.Pair({
-        car: new DSLisp.Pair({
-          car: "quote",
-          cdr: new DSLisp.Pair({
-            car: new DSLisp.Pair({
-              car: "define",
-              cdr: new DSLisp.Pair({
-                car: "x",
+
+    function testQuote(symb, word) {
+      var parsed = lisp.parse(lisp.tokenize(symb + "(define x 12)"));
+      expect(parsed).toEqual(
+        new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: word,
+            cdr: new DSLisp.Pair({
+              car: new DSLisp.Pair({
+                car: "define",
                 cdr: new DSLisp.Pair({
-                  car: "12",
+                  car: "x",
+                  cdr: new DSLisp.Pair({
+                    car: "12",
+                  })
                 })
               })
             })
           })
         })
-      })
-    );
+      );
 
-    var parsed = lisp.parse(lisp.tokenize("'foo"));
-    expect(parsed).toEqual(
-      new DSLisp.Pair({
-        car: new DSLisp.Pair({
-          car: "quote",
-          cdr: new DSLisp.Pair({
-            car: "foo",
+      var parsed = lisp.parse(lisp.tokenize(symb + "(define " + symb + "x 12)"));
+      expect(parsed).toEqual(
+        new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: word,
+            cdr: new DSLisp.Pair({
+              car: new DSLisp.Pair({
+                car: "define",
+                cdr: new DSLisp.Pair({
+                  car: new DSLisp.Pair({
+                    car: word,
+                    cdr: new DSLisp.Pair({
+                      car: "x",
+                    })
+                  }),
+                  cdr: new DSLisp.Pair({
+                    car: "12",
+                  })
+                })
+              })
+            })
           })
         })
-      })
+      );
 
-    );
+      var parsed = lisp.parse(lisp.tokenize(symb + "foo"));
+      expect(parsed).toEqual(
+        new DSLisp.Pair({
+          car: new DSLisp.Pair({
+            car: word,
+            cdr: new DSLisp.Pair({
+              car: "foo",
+            })
+          })
+        })
+
+      );
+    }
+
+    testQuote("'", "quote");
+    testQuote("`", "quasiquote");
+    testQuote(",", "unquote");
   });
 
   it("should handle dotted list", function() {
