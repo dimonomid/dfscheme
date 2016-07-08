@@ -73,6 +73,17 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("23");
   });
 
+  it("should hanlde length built-in func", function() {
+    var str = lisp.exec("(length '())");
+    expect(str).toEqual("0");
+
+    var str = lisp.exec("(length '(0))");
+    expect(str).toEqual("1");
+
+    var str = lisp.exec("(length '(0 0 3 2))");
+    expect(str).toEqual("4");
+  });
+
   it("should handle lambdas", function() {
     lisp.exec("(define f (lambda () (+ 100 1)))");
 
@@ -88,6 +99,16 @@ describe("DSLisp evaluate", function() {
 
     var str = lisp.exec("(f2 40 50 2)");
     expect(str).toEqual("96");
+  });
+
+  it("should handle lambdas with arbitrary args", function() {
+    lisp.exec("(define f (lambda args (length args)))");
+
+    var str = lisp.exec("(f)");
+    expect(str).toEqual("0");
+
+    var str = lisp.exec("(f 0 0 1)");
+    expect(str).toEqual("3");
   });
 
   it("should hanlde +", function() {
