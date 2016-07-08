@@ -279,7 +279,6 @@ describe("DSLisp evaluate", function() {
   });
 
   it("should handle closures", function() {
-    lisp.exec("(define n 100)");
     lisp.exec("(define f (lambda (x) (lambda () (define x (+ x 1)) x)))");
     lisp.exec("(define gen (f 10))");
 
