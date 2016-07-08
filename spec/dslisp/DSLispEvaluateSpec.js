@@ -101,8 +101,35 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("96");
   });
 
+  it("should handle lambdas with define syntax sugar", function() {
+    lisp.exec("(define (f) (+ 100 1))");
+
+    var str = lisp.exec("(f)");
+    expect(str).toEqual("101");
+
+    lisp.exec("(define (f2 a b) (+ a b))");
+
+    var str = lisp.exec("(f2 40 50)");
+    expect(str).toEqual("90");
+
+    lisp.exec("(define (f2 a b c) (+ a b (* c 3)))");
+
+    var str = lisp.exec("(f2 40 50 2)");
+    expect(str).toEqual("96");
+  });
+
   it("should handle lambdas with arbitrary args", function() {
     lisp.exec("(define f (lambda args (length args)))");
+
+    var str = lisp.exec("(f)");
+    expect(str).toEqual("0");
+
+    var str = lisp.exec("(f 0 0 1)");
+    expect(str).toEqual("3");
+  });
+
+  it("should handle lambdas with arbitrary args with define syntax sugar", function() {
+    lisp.exec("(define (f . args) (length args))");
 
     var str = lisp.exec("(f)");
     expect(str).toEqual("0");
