@@ -65,6 +65,31 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("(1 2 foo (quote 3) c)");
   });
 
+  it("should hanlde car, cdr", function() {
+    var str = lisp.exec("(car '(1 2 3 4))");
+    expect(str).toEqual("1");
+
+    var str = lisp.exec("(cdr '(1 2 3 4))");
+    expect(str).toEqual("(2 3 4)");
+
+    expect(function() {
+      var str = lisp.exec("(caar '(1 2 3 4))");
+    }).toThrow();
+
+    var str = lisp.exec("(caar '((1) 2 3 4))");
+    expect(str).toEqual("1");
+
+    var str = lisp.exec("(cadr '(1 2 3 4))");
+    expect(str).toEqual("2");
+
+    var str = lisp.exec("(cddr '(1 2 3 4))");
+    expect(str).toEqual("(3 4)");
+
+    expect(function() {
+      var str = lisp.exec("(cdar '(1 2 3 4))");
+    }).toThrow();
+  });
+
   it("should hanlde built-in funcs", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
