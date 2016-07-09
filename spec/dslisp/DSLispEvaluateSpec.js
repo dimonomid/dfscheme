@@ -192,6 +192,47 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("3");
   });
 
+  describe("handle equality", function() {
+    function checkPredicate(pred) {
+      var str = lisp.exec("(" + pred + " 1 1)");
+      expect(str).toEqual("#t");
+
+      var str = lisp.exec("(" + pred + " 'foo 'foo)");
+      expect(str).toEqual("#t");
+
+      var str = lisp.exec("(" + pred + " 1 2)");
+      expect(str).toEqual("#f");
+
+      var str = lisp.exec("(" + pred + " '() '())");
+      expect(str).toEqual("#t");
+    }
+
+    it("eq?", function() {
+      checkPredicate("eq?");
+    });
+    it("eqv?", function() {
+      checkPredicate("eqv?");
+    });
+    it("equal?", function() {
+      checkPredicate("eqv?");
+    });
+
+    it("distinct cases", function() {
+      var str = lisp.exec("(eq? '(1) '(1))");
+      expect(str).toEqual("#f");
+
+      var str = lisp.exec("(equal? '(1) '(1))");
+      expect(str).toEqual("#t");
+
+      var str = lisp.exec("(equal? '(1 . ('123)) '(1 . ('123)))");
+      expect(str).toEqual("#t");
+
+      var str = lisp.exec("(equal? '(1) '(2))");
+      expect(str).toEqual("#f");
+    });
+
+  });
+
   it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
