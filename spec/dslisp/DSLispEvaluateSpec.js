@@ -109,6 +109,35 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("4");
   });
 
+  it("should hanlde map", function() {
+    lisp.exec("(define (f1 x) (+ x 1))");
+    lisp.exec("(define (f2 x y) (+ x y))");
+
+    var str = lisp.exec("(map f1 '(1 2 3))");
+    expect(str).toEqual("(2 3 4)");
+
+    var str = lisp.exec("(map f2 '(1 2 3) '(10 20 30))");
+    expect(str).toEqual("(11 22 33)");
+
+    var str = lisp.exec("(map f2 '(1 2 3) '(10 20))");
+    expect(str).toEqual("(11 22)");
+
+    var str = lisp.exec("(map f2 '(1 2) '(10 20 30))");
+    expect(str).toEqual("(11 22)");
+
+    expect(function() {
+      var str = lisp.exec("(map f1)");
+    }).toThrow();
+
+    expect(function() {
+      var str = lisp.exec("(map f1 1)");
+    }).toThrow();
+
+    expect(function() {
+      var str = lisp.exec("(map f1 '(1 2 . 3))");
+    }).toThrow();
+  });
+
   it("should handle lambdas", function() {
     lisp.exec("(define f (lambda () (+ 100 1)))");
 
