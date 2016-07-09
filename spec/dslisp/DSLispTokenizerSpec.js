@@ -44,6 +44,17 @@ describe("DSLisp tokenizer", function() {
     expect(tokens).toEqual(["'", "foo", "'", "bar"]);
   });
 
+  it("should tokenize quoted expr", function() {
+    var tokens = lisp.tokenize('(define x "foo")');
+    expect(tokens).toEqual(["(", "define", "x", '"foo"', ")"]);
+
+    var tokens = lisp.tokenize('(define x "foo bar")');
+    expect(tokens).toEqual(["(", "define", "x", '"foo bar"', ")"]);
+
+    var tokens = lisp.tokenize('(define x "(define x hey)")');
+    expect(tokens).toEqual(["(", "define", "x", '"(define x hey)"', ")"]);
+  });
+
   // TODO: implement correct string handling in tokenizer and uncomment this test
   /*
   it("should handle quoted strings", function() {
