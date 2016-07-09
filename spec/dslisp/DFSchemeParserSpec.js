@@ -1,20 +1,20 @@
-describe("DSLisp parser", function() {
-  var DSLisp = require('../../lib/DSLisp.js')
+describe("DFScheme parser", function() {
+  var DFScheme = require('../../lib/DFScheme.js')
   var lisp;
 
   beforeEach(function() {
-    lisp = new DSLisp();
+    lisp = new DFScheme();
   });
 
   it("should parse simple expr", function() {
     var parsed = lisp.parse(lisp.tokenize("(define x 12)"));
     expect(parsed).toEqual(
-      new DSLisp.Pair(
-        new DSLisp.Pair(
+      new DFScheme.Pair(
+        new DFScheme.Pair(
           "define",
-          new DSLisp.Pair(
+          new DFScheme.Pair(
             "x",
-            new DSLisp.Pair(
+            new DFScheme.Pair(
               "12"
             )
           )
@@ -28,15 +28,15 @@ describe("DSLisp parser", function() {
     function testQuote(symb, word) {
       var parsed = lisp.parse(lisp.tokenize(symb + "(define x 12)"));
       expect(parsed).toEqual(
-        new DSLisp.Pair(
-          new DSLisp.Pair(
+        new DFScheme.Pair(
+          new DFScheme.Pair(
             word,
-            new DSLisp.Pair(
-              new DSLisp.Pair(
+            new DFScheme.Pair(
+              new DFScheme.Pair(
                 "define",
-                new DSLisp.Pair(
+                new DFScheme.Pair(
                   "x",
-                  new DSLisp.Pair(
+                  new DFScheme.Pair(
                     "12"
                   )
                 )
@@ -48,20 +48,20 @@ describe("DSLisp parser", function() {
 
       var parsed = lisp.parse(lisp.tokenize(symb + "(define " + symb + "x 12)"));
       expect(parsed).toEqual(
-        new DSLisp.Pair(
-          new DSLisp.Pair(
+        new DFScheme.Pair(
+          new DFScheme.Pair(
             word,
-            new DSLisp.Pair(
-              new DSLisp.Pair(
+            new DFScheme.Pair(
+              new DFScheme.Pair(
                 "define",
-                new DSLisp.Pair(
-                  new DSLisp.Pair(
+                new DFScheme.Pair(
+                  new DFScheme.Pair(
                     word,
-                    new DSLisp.Pair(
+                    new DFScheme.Pair(
                       "x"
                     )
                   ),
-                  new DSLisp.Pair(
+                  new DFScheme.Pair(
                     "12"
                   )
                 )
@@ -73,10 +73,10 @@ describe("DSLisp parser", function() {
 
       var parsed = lisp.parse(lisp.tokenize(symb + "foo"));
       expect(parsed).toEqual(
-        new DSLisp.Pair(
-          new DSLisp.Pair(
+        new DFScheme.Pair(
+          new DFScheme.Pair(
             word,
-            new DSLisp.Pair(
+            new DFScheme.Pair(
               "foo"
             )
           )
@@ -93,11 +93,11 @@ describe("DSLisp parser", function() {
   it("should handle dotted list", function() {
     var parsed = lisp.parse(lisp.tokenize("'(1 . 2)"));
     expect(parsed).toEqual(
-      new DSLisp.Pair(
-        new DSLisp.Pair(
+      new DFScheme.Pair(
+        new DFScheme.Pair(
           "quote",
-          new DSLisp.Pair(
-            new DSLisp.Pair(
+          new DFScheme.Pair(
+            new DFScheme.Pair(
               "1",
               "2"
             )
@@ -110,11 +110,11 @@ describe("DSLisp parser", function() {
   it("should handle dotted list", function() {
     var parsed = lisp.parse(lisp.tokenize("'(1 . ())"));
     expect(parsed).toEqual(
-      new DSLisp.Pair(
-        new DSLisp.Pair(
+      new DFScheme.Pair(
+        new DFScheme.Pair(
           "quote",
-          new DSLisp.Pair(
-            new DSLisp.Pair(
+          new DFScheme.Pair(
+            new DFScheme.Pair(
               "1"
             )
           )
@@ -124,12 +124,12 @@ describe("DSLisp parser", function() {
 
     var parsed = lisp.parse(lisp.tokenize("(define . (x . (12 . ())))"));
     expect(parsed).toEqual(
-      new DSLisp.Pair(
-        new DSLisp.Pair(
+      new DFScheme.Pair(
+        new DFScheme.Pair(
           "define",
-          new DSLisp.Pair(
+          new DFScheme.Pair(
             "x",
-            new DSLisp.Pair(
+            new DFScheme.Pair(
               "12"
             )
           )

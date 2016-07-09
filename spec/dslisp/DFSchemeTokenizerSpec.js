@@ -1,9 +1,9 @@
-describe("DSLisp tokenizer", function() {
-  var DSLisp = require('../../lib/DSLisp.js')
+describe("DFScheme tokenizer", function() {
+  var DFScheme = require('../../lib/DFScheme.js')
   var lisp;
 
   beforeEach(function() {
-    lisp = new DSLisp();
+    lisp = new DFScheme();
   });
 
   it("should tokenize simple expr", function() {

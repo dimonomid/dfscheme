@@ -1,9 +1,9 @@
-describe("DSLisp stringify", function() {
-  var DSLisp = require('../../lib/DSLisp.js')
+describe("DFScheme stringify", function() {
+  var DFScheme = require('../../lib/DFScheme.js')
   var lisp;
 
   beforeEach(function() {
-    lisp = new DSLisp();
+    lisp = new DFScheme();
   });
 
   it("should hanlde simple expr", function() {
