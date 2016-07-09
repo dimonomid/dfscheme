@@ -302,6 +302,28 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("#t");
   });
 
+  it("should handle odd? and even?", function() {
+    var str = lisp.exec("(odd? 1)");
+    expect(str).toEqual("#t");
+
+    var str = lisp.exec("(odd? 2)");
+    expect(str).toEqual("#f");
+
+    var str = lisp.exec("(even? 1)");
+    expect(str).toEqual("#f");
+
+    var str = lisp.exec("(even? 2)");
+    expect(str).toEqual("#t");
+  });
+
+  it("should handle filter and remove", function() {
+    var str = lisp.exec("(filter odd? '(1 2 3 4 5))");
+    expect(str).toEqual("(1 3 5)");
+
+    var str = lisp.exec("(remove odd? '(1 2 3 4 5))");
+    expect(str).toEqual("(2 4)");
+  });
+
   it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
