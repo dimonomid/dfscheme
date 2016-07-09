@@ -233,6 +233,28 @@ describe("DSLisp evaluate", function() {
 
   });
 
+  it("should hanlde assoc", function() {
+    lisp.exec("(define e '((a 1) (b 2) (c 3)))");
+
+    var str = lisp.exec("(assq 'a e)");
+    expect(str).toEqual("(a 1)");
+
+    var str = lisp.exec("(assq 'b e)");
+    expect(str).toEqual("(b 2)");
+
+    var str = lisp.exec("(assq 'd e)");
+    expect(str).toEqual("#f");
+
+    var str = lisp.exec("(assq '(a) '(((a)) ((b)) ((c))))");
+    expect(str).toEqual("#f");
+
+    var str = lisp.exec("(assoc '(a) '(((a)) ((b)) ((c))))");
+    expect(str).toEqual("((a))");
+
+    var str = lisp.exec("(assv 5 '((2 3) (5 7) (11 13)))");
+    expect(str).toEqual("(5 7)");
+  });
+
   it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
