@@ -267,6 +267,41 @@ describe("DSLisp evaluate", function() {
     }).toThrow();
   });
 
+  it("should hanlde append", function() {
+    var str = lisp.exec("(append)");
+    expect(str).toEqual("()");
+
+    var str = lisp.exec("(append '(x) '(y))");
+    expect(str).toEqual("(x y)");
+
+    var str = lisp.exec("(append '(a) '(b c d))");
+    expect(str).toEqual("(a b c d)");
+
+    var str = lisp.exec("(append '(a b) '(c . d))");
+    expect(str).toEqual("(a b c . d)");
+
+    lisp.exec("(define x '(1 2))")
+    lisp.exec("(define y '(3 4))")
+    lisp.exec("(define z '(5 6))")
+
+    var str = lisp.exec("(eq? x (append x))");
+    expect(str).toEqual("#t");
+
+    var str = lisp.exec("(eq? x (append x y))");
+    expect(str).toEqual("#f");
+
+    var str = lisp.exec("(eq? y (cdr (cdr (append x y))))");
+    expect(str).toEqual("#t");
+
+    lisp.exec("(define all (append x y z))")
+
+    var str = lisp.exec("all");
+    expect(str).toEqual("(1 2 3 4 5 6)");
+
+    var str = lisp.exec("(eq? z (cdr (cdr (cdr (cdr all)))))");
+    expect(str).toEqual("#t");
+  });
+
   it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
