@@ -255,6 +255,18 @@ describe("DSLisp evaluate", function() {
     expect(str).toEqual("(5 7)");
   });
 
+  it("should hanlde apply", function() {
+    var str = lisp.exec("(apply + '(1 2))");
+    expect(str).toEqual("3");
+
+    var str = lisp.exec("(apply (lambda (x y) (* x y)) '(10 2))");
+    expect(str).toEqual("20");
+
+    expect(function() {
+      var str = lisp.exec("(apply (lambda (x y) (* x y)) '(10 2 3))");
+    }).toThrow();
+  });
+
   it("should hanlde +", function() {
     var str = lisp.exec("(+ 1 2)");
     expect(str).toEqual("3");
