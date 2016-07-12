@@ -439,6 +439,31 @@ describe("DFScheme evaluate", function() {
     expect(v1).toEqual(v2);
   });
 
+  it("should perform tail-recursion with apply", function() {
+    lisp.exec("(define fact (lambda (n) (fact-iter 1 1 n)))");
+    lisp.exec(
+      "(define fact-iter (lambda (product counter max-count) " +
+      "  (if (< max-count counter) " +
+      "      product " +
+      "      (apply fact-iter `(,(* counter product) " +
+      "                 ,(+ counter 1) " +
+      "                 ,max-count)))))"
+    );
+
+    lisp.resetMaxCsLen();
+    var str = lisp.exec("(fact 5)");
+    var v1 = lisp.getMaxCsLen();
+    expect(str).toEqual("120");
+
+    lisp.resetMaxCsLen()
+    var str = lisp.exec("(fact 10)");
+    var v2 = lisp.getMaxCsLen();
+    expect(str).toEqual("3628800");
+
+    // the max call stack size should be equal in both (fact 5) and (fact 10)
+    expect(v1).toEqual(v2);
+  });
+
   it("should handle closures", function() {
     lisp.exec("(define f (lambda (x) (lambda () (define x (+ x 1)) x)))");
     lisp.exec("(define gen (f 10))");
